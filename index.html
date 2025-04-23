@@ -1,109 +1,80 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!DOCTYPE html><html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Aşkımın Kalpleri</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Dancing Script', cursive;
-            background: linear-gradient(to right, #ffe6e6, #fff0f5);
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 2.5em;
-            color: #c2185b;
-        }
-        #oyunAlani {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-            gap: 10px;
-            max-width: 600px;
-            margin: 20px auto;
-        }
-        .kalp-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .kalp {
-            width: 60px;
-            height: 60px;
-            background-image: url('kalp.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            border: none;
-            cursor: pointer;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            animation: belirme 0.6s ease;
-        }
-        .kalp.tiklandi {
-            opacity: 0;
-            transform: scale(0.5);
-            pointer-events: none;
-        }
-        @keyframes belirme {
-            from { opacity: 0; transform: scale(0.5); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        #sozAlani, #cevapAlani, #sonucAlani {
-            margin-top: 20px;
-        }
-        .cevapButonu {
-            font-family: inherit;
-            font-size: 1em;
-            padding: 8px 15px;
-            margin: 5px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .cevapButonu:hover {
-            background-color: #ffe6e6;
-        }
-        .buyukKalp {
-            font-size: 4em;
-            color: red;
-            margin: 30px 0 10px;
-            animation: kalpZoom 1s ease forwards;
-        }
-        @keyframes kalpZoom {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .dilSecim {
-            margin-bottom: 15px;
-        }
-        .dilButonu {
-            font-family: inherit;
-            padding: 6px 12px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            background-color: #f8bbd0;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aşkımın Kalpleri</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background-color: #fce4ec;
+    }
+    #oyunAlani {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      gap: 10px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    .kalp-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .kalp {
+      width: 60px;
+      height: 60px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29.6'><path fill='red' d='M23.6,0c-3.4,0-6.4,2-8,4.9C13.4,2,10.4,0,7,0C3,0,0,3,0,6.9c0,5.7,5.4,10.3,13.6,17.1L16,26.6l2.4-2.1C26.6,17.2,32,12.6,32,6.9C32,3,29,0,25,0C24.5,0,24.1,0,23.6,0z'/></svg>");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      border: none;
+      cursor: pointer;
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .kalp.tiklandi {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    #sozAlani { margin-top: 20px; font-style: italic; }
+    #cevapAlani { margin-top: 10px; }
+    .cevapButonu {
+      padding: 8px 15px;
+      margin: 5px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+    #sonucAlani { margin-top: 30px; font-size: 1.2em; font-weight: bold; }
+    .buyukKalp {
+      font-size: 4em;
+      color: red;
+      margin-bottom: 10px;
+    }
+    .dilSecim { margin-bottom: 10px; }
+    .dilButonu {
+      padding: 5px 10px;
+      margin: 5px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #eee;
+    }
+  </style>
 </head>
 <body>
-
-<div class="dilSecim">
+  <div class="dilSecim">
     <button class="dilButonu" onclick="setLanguage('tr')">Türkçe</button>
     <button class="dilButonu" onclick="setLanguage('ru')">Русский</button>
-</div>
-
-<h1>Aşkımın Kalpleri</h1>
-<audio id="muzik" src="ask.mp3" preload="auto"></audio>
-<div id="oyunAlani"></div>
-<div id="sozAlani"></div>
-<div id="cevapAlani"></div>
-<div id="sonucAlani"></div>
-
-<script>
+  </div>  <h1>Aşkımın Kalpleri</h1>
+  <div id="oyunAlani"></div>
+  <div id="sozAlani"></div>
+  <div id="cevapAlani"></div>
+  <div id="sonucAlani"></div>  <script>
     const oyunAlani = document.getElementById('oyunAlani');
     const sozAlani = document.getElementById('sozAlani');
     const cevapAlani = document.getElementById('cevapAlani');
@@ -113,101 +84,134 @@
     let secilenCevaplar = [];
     let currentLanguage = 'tr';
 
-    const askSozleriTr = [...]; // aynı içerik
-    const askSozleriRu = [...]; // aynı içerik
-    const cevapSecenekleriTr = [...]; // aynı içerik
-    const cevapSecenekleriRu = [...]; // aynı içerik
+    const askSozleriTr = [
+      "Gözlerin, ruhuma açılan en güzel pencere.",
+      "Seninle geçen her an, ömrüme değer katıyor.",
+      "Kalbim, adını her duyduğunda hızlanıyor.",
+      "Varlığın, hayatıma anlam katıyor.",
+      "Gülüşün, içimi ısıtan bir güneş gibi.",
+      "Sen benim en değerli hediyemsin.",
+      "Aşk, seninle anlam buldu."
+    ];
 
-    const muzik = document.getElementById("muzik");
+    const askSozleriRu = [
+      "Твои глаза - самое прекрасное окно в мою душу.",
+      "Каждый миг с тобой бесценен для моей жизни.",
+      "Мое сердце бьется быстрее, когда я слышу твое имя.",
+      "Твое присутствие наполняет мою жизнь смыслом.",
+      "Твоя улыбка - как солнце, согревающее меня изнутри.",
+      "Ты - мой самый драгоценный подарок.",
+      "Любовь обрела смысл с тобой."
+    ];
+
+    const cevapSecenekleriTr = [
+      ["Çok tatlısın.", "Sen de benim için çok özelsin."],
+      ["Teşekkür ederim, çok naziksin.", "Ben de seninle çok mutluyum."],
+      ["Bunu duymak çok güzel.", "Benim kalbim de senin için atıyor."],
+      ["Ne kadar güzel bir iltifat.", "Seninle hayat çok daha güzel."],
+      ["Beni çok mutlu ettin.", "Senin enerjin de beni ısıtıyor."],
+      ["Çok kıymetli sözler.", "Sen de benim için çok değerlisin."],
+      ["Aşkımız daim olsun.", "Sen benim her şeyimsin."]
+    ];
+
+    const cevapSecenekleriRu = [
+      ["Ты очень милый.", "Ты тоже очень особенный для меня."],
+      ["Спасибо, очень любезно.", "Я тоже очень счастлив(а) с тобой."],
+      ["Это очень приятно слышать.", "Мое сердце тоже бьется для тебя."],
+      ["Какой прекрасный комплимент.", "Жизнь с тобой намного прекраснее."],
+      ["Ты меня очень обрадовал(а).", "Твоя энергия тоже согревает меня."],
+      ["Очень ценные слова.", "Ты тоже очень ценен(ценна) для меня."],
+      ["Пусть наша любовь будет вечной.", "Ты - все для меня."]
+    ];
 
     function kalpOlustur(index) {
-        const kalpContainer = document.createElement('div');
-        kalpContainer.classList.add('kalp-container');
-        const kalp = document.createElement('button');
-        kalp.classList.add('kalp');
-        kalp.dataset.index = index;
-        kalp.addEventListener('click', kalpTiklandi);
-        kalpContainer.appendChild(kalp);
-        oyunAlani.appendChild(kalpContainer);
+      const kalpContainer = document.createElement('div');
+      kalpContainer.classList.add('kalp-container');
+      const kalp = document.createElement('button');
+      kalp.classList.add('kalp');
+      kalp.dataset.index = index;
+      kalp.addEventListener('click', kalpTiklandi);
+      kalpContainer.appendChild(kalp);
+      oyunAlani.appendChild(kalpContainer);
     }
 
     function kalpTiklandi() {
-        if (muzik.paused) muzik.play();
-        const index = parseInt(this.dataset.index);
-        if (!tiklananKalpler.includes(index)) {
-            tiklananKalpler.push(index);
-            this.classList.add('tiklandi');
-            sozAlani.innerText = currentLanguage === 'tr' ? askSozleriTr[index] : askSozleriRu[index];
-            cevapAlani.innerHTML = '';
-            const cevaplar = currentLanguage === 'tr' ? cevapSecenekleriTr[index] : cevapSecenekleriRu[index];
-            cevaplar.forEach((cevap, i) => {
-                const btn = document.createElement('button');
-                btn.classList.add('cevapButonu');
-                btn.innerText = cevap;
-                btn.onclick = () => cevapSecildi(index, cevap);
-                cevapAlani.appendChild(btn);
-            });
-            if (tiklananKalpler.length === kalpSayisi) {
-                setTimeout(oyunBitti, 1500);
-            }
+      const index = parseInt(this.dataset.index);
+      if (!tiklananKalpler.includes(index)) {
+        tiklananKalpler.push(index);
+        this.classList.add('tiklandi');
+        sozAlani.innerText = currentLanguage === 'tr' ? askSozleriTr[index] : askSozleriRu[index];
+        cevapAlani.innerHTML = '';
+        const cevaplar = currentLanguage === 'tr' ? cevapSecenekleriTr[index] : cevapSecenekleriRu[index];
+        cevaplar.forEach((cevap, i) => {
+          const cevapButonu = document.createElement('button');
+          cevapButonu.classList.add('cevapButonu');
+          cevapButonu.innerText = cevap;
+          cevapButonu.addEventListener('click', () => cevapSecildi(index, cevap));
+          cevapAlani.appendChild(cevapButonu);
+        });
+
+        if (tiklananKalpler.length === kalpSayisi) {
+          oyunBitti();
         }
+      }
     }
 
-    function cevapSecildi(index, cevap) {
-        secilenCevaplar[index] = cevap;
-        document.querySelectorAll('.cevapButonu').forEach(btn => btn.disabled = true);
-        const kalp = document.querySelector(`.kalp[data-index="${index}"]`);
-        if (kalp) kalp.style.display = 'none';
+    function cevapSecildi(sozIndex, secilenCevap) {
+      secilenCevaplar[sozIndex] = secilenCevap;
+      const secilenButonlar = cevapAlani.querySelectorAll('.cevapButonu');
+      secilenButonlar.forEach(buton => buton.disabled = true);
+      const tiklananKalp = document.querySelector(`.kalp[data-index="${sozIndex}"]`);
+      if (tiklananKalp) tiklananKalp.style.display = 'none';
     }
 
     function oyunBitti() {
-        oyunAlani.innerHTML = '';
-        sozAlani.innerText = '';
-        cevapAlani.innerHTML = '';
-        sonucAlani.innerHTML = '';
+      oyunAlani.innerHTML = '';
+      sozAlani.innerText = '';
+      cevapAlani.innerHTML = '';
+      sonucAlani.innerHTML = '';
 
-        const baslik = document.createElement('h2');
-        baslik.innerText = currentLanguage === 'tr' ? "Verdiğin Cevaplar:" : "Твои Ответы:";
-        sonucAlani.appendChild(baslik);
+      const sonucBaslik = document.createElement('h2');
+      sonucBaslik.innerText = currentLanguage === 'tr' ? "Verdiğin Cevaplar:" : "Твои Ответы:";
+      sonucAlani.appendChild(sonucBaslik);
 
-        secilenCevaplar.forEach((cevap, i) => {
-            const p = document.createElement('p');
-            const soz = currentLanguage === 'tr' ? askSozleriTr[i] : askSozleriRu[i];
-            p.innerText = `${soz} -> ${cevap}`;
-            sonucAlani.appendChild(p);
-        });
+      secilenCevaplar.forEach((cevap, index) => {
+        const cevapMetni = document.createElement('p');
+        const sorulanSoz = currentLanguage === 'tr' ? askSozleriTr[index] : askSozleriRu[index];
+        cevapMetni.innerText = `${sorulanSoz} -> ${cevap}`;
+        sonucAlani.appendChild(cevapMetni);
+      });
 
-        const kalp = document.createElement('div');
-        kalp.classList.add('buyukKalp');
-        kalp.innerText = '❤️';
-        sonucAlani.appendChild(kalp);
+      const buyukKalp = document.createElement('div');
+      buyukKalp.classList.add('buyukKalp');
+      buyukKalp.innerText = '❤️';
+      sonucAlani.appendChild(buyukKalp);
 
-        const mesaj = document.createElement('p');
-        mesaj.style.fontSize = '1.5em';
-        mesaj.style.fontWeight = 'bold';
-        mesaj.innerText = currentLanguage === 'tr'
-            ? "Seni seviyorum, dünden çok yarından az ❤️"
-            : "Я люблю тебя, вчера больше, чем завтра ❤️";
-        sonucAlani.appendChild(mesaj);
+      const sonMesajTr = "Seni seviyorum, dünden çok, yarından az ❤️";
+      const sonMesajRu = "Я люблю тебя, вчера больше, чем завтра ❤️";
+      const sonMesaj = document.createElement('p');
+      sonMesaj.style.fontSize = '1.5em';
+      sonMesaj.style.fontWeight = 'bold';
+      sonMesaj.innerText = currentLanguage === 'tr' ? sonMesajTr : sonMesajRu;
+      sonucAlani.appendChild(sonMesaj);
     }
 
     function setLanguage(lang) {
-        currentLanguage = lang;
-        tiklananKalpler = [];
-        secilenCevaplar = [];
-        oyunAlani.innerHTML = '';
-        sozAlani.innerText = '';
-        cevapAlani.innerHTML = '';
-        sonucAlani.innerHTML = '';
-        for (let i = 0; i < kalpSayisi; i++) {
-            kalpOlustur(i);
-        }
-        document.querySelector('h1').innerText = currentLanguage === 'tr'
-            ? "Aşkımın Kalpleri"
-            : "Сердца моей любви";
+      currentLanguage = lang;
+      tiklananKalpler = [];
+      secilenCevaplar = [];
+      oyunAlani.innerHTML = '';
+      sozAlani.innerText = '';
+      cevapAlani.innerHTML = '';
+      sonucAlani.innerHTML = '';
+      for (let i = 0; i < kalpSayisi; i++) {
+        kalpOlustur(i);
+      }
+      document.querySelector('h1').innerText = currentLanguage === 'tr' ? "Aşkımın Kalpleri" : "Сердца моей любви";
     }
 
-    setLanguage('tr'); // varsayılan Türkçe başlasın
-</script>
-</body>
+    for (let i = 0; i < kalpSayisi; i++) {
+      kalpOlustur(i);
+    }
+  </script></body>
 </html>
