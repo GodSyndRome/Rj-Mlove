@@ -61,15 +61,13 @@
         { q: "Arcan Maria'ya mesaj atar: \"Uykun mu geldi, yoksa bana mı küssün?\"", a: ["Uykum geldi", "Sana kırgınım"] },
         { q: "Maria cevap verir: \"Uzak olmak zor ama sevgim hiç azalmadı.\"", a: ["Benim de...", "Sonsuza kadar sen"] },
         { q: "Bir tartışma yaşanır... Arcan: \"Keşke her şey daha kolay olsaydı.\"", a: ["Seninle her zorluğu aşarım", "Bazen pes etmek istiyorum"] },
-        { q: "Maria: \"Kalbim sadece seninle.\"", a: ["Benimki de", "Gözlerin aklımda"] },
-        { q: "Aylar geçer... sonunda buluşurlar. Maria gözlerinin içine bakar...", a: ["Seni seviyorum, dünden çok, yarından az ♥️"] }
+        { q: "Maria: \"Kalbim sadece seninle.\"", a: ["Benimki de", "Gözlerin aklımda"] }
       ],
       ru: [
         { q: "Арджан пишет Марии: \"Ты спишь или обижаешься на меня?\"", a: ["Хочу спать", "Я обижена"] },
         { q: "Мария отвечает: \"На расстоянии трудно, но моя любовь не угасла.\"", a: ["И моя тоже...", "Навсегда ты"] },
         { q: "Происходит ссора... Арджан: \"Если бы всё было проще.\"", a: ["С тобой всё преодолею", "Иногда хочется сдаться"] },
-        { q: "Мария: \"Моё сердце только с тобой.\"", a: ["И моё", "Твои глаза в моей памяти"] },
-        { q: "Проходят месяцы... Наконец они встречаются. Мария смотрит ему в глаза...", a: ["Я люблю тебя — больше, чем вчера, меньше, чем завтра ♥️"] }
+        { q: "Мария: \"Моё сердце только с тобой.\"", a: ["И моё", "Твои глаза в моей памяти"] }
       ]
     };
 
@@ -82,6 +80,32 @@
       renderScene();
     }
 
+    async function getAIResponse(userChoice) {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer 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",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "mistralai/mixtral-8x7b-instruct",
+          messages: [
+            {
+              role: "system",
+              content: "Sen Maria ile Arcan'ın uzun mesafe aşk hikayesini yazan romantik bir yazarsın. Diyaloglar duygu dolu, insana dokunan olmalı."
+            },
+            {
+              role: "user",
+              content: `Oyuncu şu seçimi yaptı: "${userChoice}". Bu duruma göre Maria ve Arcan arasında geçen 1-2 cümlelik romantik bir diyalog yaz.`
+            }
+          ]
+        })
+      });
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    }
+
     function renderScene() {
       const scene = scenes[currentLang][index];
       const gameDiv = document.getElementById('game');
@@ -90,10 +114,17 @@
         <div class="dialogue">
           <div class="question">${scene.q}</div>
           <div class="choices">
-            ${scene.a.map(a => `<button onclick="nextScene()">${a}</button>`).join('')}
+            ${scene.a.map(a => `<button onclick="handleChoice('${a}')">${a}</button>`).join('')}
           </div>
         </div>
       `;
+    }
+
+    async function handleChoice(choice) {
+      const gameDiv = document.getElementById('game');
+      gameDiv.innerHTML = `<p>Yükleniyor...</p>`;
+      const aiText = await getAIResponse(choice);
+      gameDiv.innerHTML = `<div class='dialogue'><p>${aiText}</p><button onclick='nextScene()'>Devam et</button></div>`;
     }
 
     function nextScene() {
@@ -102,7 +133,7 @@
         renderScene();
       } else {
         document.getElementById('game').innerHTML = `
-          <h2 style="text-align:center;">${scenes[currentLang][index - 1].a[0]}</h2>
+          <h2 style="text-align:center;">${currentLang === 'tr' ? 'Seni seviyorum, dünden çok, yarından az ♥️' : 'Я люблю тебя — больше, чем вчера, меньше, чем завтра ♥️'}</h2>
         `;
       }
     }
