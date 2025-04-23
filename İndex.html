@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arcan & Maria - Aşk Oyunu</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #ffdee9, #b5fffc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #game {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 600px;
+    }
+    .scene {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .scene.active {
+      display: flex;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #ff7eb9;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .lang-switch {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="lang-switch">
+    <button onclick="switchLang()">TR / RU</button>
+  </div>
+  <div id="game">
+    <div class="scene active" data-index="0">
+      <p data-tr="Bu hikaye Arcan ile Maria'nın..." data-ru="Эта история об Аркане и Марии..."></p>
+      <button onclick="nextScene()" data-tr="Başla" data-ru="Начать">Başla</button>
+    </div><div class="scene" data-index="1">
+  <p data-tr="Arcan geceleri Maria'yı düşünerek uyuyordu..." data-ru="Аркан засыпал, думая о Марии..."></p>
+  <button onclick="nextScene()" data-tr="Devam" data-ru="Далее">Devam</button>
+</div>
+
+<div class="scene" data-index="2">
+  <p data-tr="Mesafeler vardı, ama kalpler yakın..." data-ru="Расстояния были, но сердца были рядом..."></p>
+  <button onclick="nextScene()" data-tr="Devam" data-ru="Далее">Devam</button>
+</div>
+
+<div class="scene" data-index="3">
+  <p data-tr="Bazen tartıştılar, ama hep birbirlerini sevdiler." data-ru="Иногда они ссорились, но всегда любили друг друга."></p>
+  <button onclick="nextScene()" data-tr="Devam" data-ru="Далее">Devam</button>
+</div>
+
+<div class="scene" data-index="4">
+  <p data-tr="Ve sonunda buluştular..." data-ru="И в конце концов они встретились..."></p>
+  <button onclick="nextScene()" data-tr="Son" data-ru="Финал">Son</button>
+</div>
+
+<div class="scene" data-index="5">
+  <h2 data-tr="Seni seviyorum, dünden çok, yarından az ♥️" data-ru="Я люблю тебя — больше, чем вчера, но меньше, чем завтра ♥️"></h2>
+</div>
+
+  </div>  <script>
+    let lang = 'tr';
+
+    function switchLang() {
+      lang = lang === 'tr' ? 'ru' : 'tr';
+      updateLanguage();
+    }
+
+    function updateLanguage() {
+      document.querySelectorAll('[data-tr]').forEach(el => {
+        el.textContent = el.dataset[lang];
+      });
+    }
+
+    function nextScene() {
+      const current = document.querySelector('.scene.active');
+      const nextIndex = parseInt(current.dataset.index) + 1;
+      const next = document.querySelector(`.scene[data-index='${nextIndex}']`);
+      if (next) {
+        current.classList.remove('active');
+        next.classList.add('active');
+        updateLanguage();
+      }
+    }
+
+    window.onload = () => updateLanguage();
+  </script></body>
+</html>
