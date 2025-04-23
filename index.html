@@ -2,37 +2,47 @@
 <html>
 <head>
     <title>Aşk İlanı Oyunu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: sans-serif; text-align: center; }
-        #oyunAlani { width: 400px; height: 300px; margin: 20px auto; position: relative; }
-        .kalp {
-            width: 50px;
-            height: 50px;
-            background-color: pink;
-            color: white;
-            border-radius: 50%;
-            position: absolute;
+        body { font-family: sans-serif; text-align: center; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        #oyunAlani {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Telefonla uyumlu esnek grid */
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 600px; /* Geniş ekranlar için maksimum genişlik */
+        }
+        .kalp-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5em;
-            cursor: pointer;
-            user-select: none; /* Metin seçilmesini engelle */
-            background-image: url('kalp.png'); /* Kalp görseli için */
+        }
+        .kalp {
+            width: 60px;
+            height: 60px;
+            background-image: url('kalp.png');
             background-size: cover;
+            background-repeat: no-repeat;
             border: none;
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .kalp.tiklandi {
+            opacity: 0.5; /* Tıklandığında soluklaşır */
+            pointer-events: none; /* Tekrar tıklanmayı engeller */
         }
         #sozAlani { margin-top: 20px; font-style: italic; }
         #cevapAlani { margin-top: 10px; }
-        .cevapButonu { padding: 8px 15px; margin: 5px; cursor: pointer; }
+        .cevapButonu { padding: 8px 15px; margin: 5px; cursor: pointer; border: 1px solid #ccc; border-radius: 5px; background-color: #fff; }
         #sonucAlani { margin-top: 30px; font-size: 1.2em; font-weight: bold; }
         .buyukKalp {
-            font-size: 5em;
+            font-size: 4em;
             color: red;
             margin-bottom: 10px;
         }
         .dilSecim { margin-bottom: 10px; }
-        .dilButonu { padding: 5px 10px; margin: 5px; cursor: pointer; }
+        .dilButonu { padding: 5px 10px; margin: 5px; cursor: pointer; border: 1px solid #ccc; border-radius: 5px; background-color: #eee; }
     </style>
 </head>
 <body>
@@ -53,10 +63,10 @@
         const sozAlani = document.getElementById('sozAlani');
         const cevapAlani = document.getElementById('cevapAlani');
         const sonucAlani = document.getElementById('sonucAlani');
-        const kalpSayisi = 7; // Daha az kalp daha hızlı bir deneyim sunar
+        const kalpSayisi = 7;
         let tiklananKalpler = [];
         let secilenCevaplar = [];
-        let currentLanguage = 'tr'; // Başlangıç dili
+        let currentLanguage = 'tr';
 
         const askSozleriTr = [
             "Gözlerin, ruhuma açılan en güzel pencere.",
@@ -98,30 +108,24 @@
             ["Пусть наша любовь будет вечной.", "Ты - все для меня."]
         ];
 
-        function rastgeleKonum() {
-            const x = Math.random() * (oyunAlani.offsetWidth - 50);
-            const y = Math.random() * (oyunAlani.offsetHeight - 50);
-            return { x, y };
-        }
-
         function kalpOlustur(index) {
+            const kalpContainer = document.createElement('div');
+            kalpContainer.classList.add('kalp-container');
             const kalp = document.createElement('button');
             kalp.classList.add('kalp');
-            const konum = rastgeleKonum();
-            kalp.style.left = `${konum.x}px`;
-            kalp.style.top = `${konum.y}px`;
-            kalp.dataset.index = index; // Kalbin hangi sözü içerdiğini sakla
+            kalp.dataset.index = index;
             kalp.addEventListener('click', kalpTiklandi);
-            oyunAlani.appendChild(kalp);
+            kalpContainer.appendChild(kalp);
+            oyunAlani.appendChild(kalpContainer);
         }
 
         function kalpTiklandi() {
             const index = parseInt(this.dataset.index);
             if (!tiklananKalpler.includes(index)) {
                 tiklananKalpler.push(index);
-                this.style.opacity = '0.7'; // Tıklandığını belirtmek için
+                this.classList.add('tiklandi');
                 sozAlani.innerText = currentLanguage === 'tr' ? askSozleriTr[index] : askSozleriRu[index];
-                cevapAlani.innerHTML = ''; // Önceki cevapları temizle
+                cevapAlani.innerHTML = '';
                 const cevaplar = currentLanguage === 'tr' ? cevapSecenekleriTr[index] : cevapSecenekleriRu[index];
                 cevaplar.forEach((cevap, i) => {
                     const cevapButonu = document.createElement('button');
@@ -140,7 +144,11 @@
         function cevapSecildi(sozIndex, secilenCevap) {
             secilenCevaplar[sozIndex] = secilenCevap;
             const secilenButonlar = cevapAlani.querySelectorAll('.cevapButonu');
-            secilenButonlar.forEach(buton => buton.disabled = true); // Cevap seçildikten sonra butonları devre dışı bırak
+            secilenButonlar.forEach(buton => buton.disabled = true);
+            const tiklananKalp = document.querySelector(`.kalp[data-index="${sozIndex}"]`);
+            if (tiklananKalp) {
+                tiklananKalp.style.display = 'none'; // Kalbi gizle
+            }
         }
 
         function oyunBitti() {
@@ -184,12 +192,11 @@
             for (let i = 0; i < kalpSayisi; i++) {
                 kalpOlustur(i);
             }
-            const sonucBaslik = document.createElement('h2');
+            const sonucBaslik = document.createElement('h1');
             sonucBaslik.innerText = currentLanguage === 'tr' ? "Aşkımın Kalpleri" : "Сердца моей любви";
             document.querySelector('h1').innerText = sonucBaslik.innerText;
         }
 
-        // Başlangıçta kalpleri oluştur
         for (let i = 0; i < kalpSayisi; i++) {
             kalpOlustur(i);
         }
