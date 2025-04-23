@@ -1,143 +1,79 @@
-<!DOCTYPE html><html lang="tr">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arcan & Maria - Aşk Oyunu</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-    .dialogue {
-      margin-bottom: 30px;
-    }
-    .question {
-      font-weight: bold;
-      font-size: 1.2em;
-    }
-    .choices button {
-      display: block;
-      margin: 10px 0;
-      padding: 10px;
-      width: 100%;
-      background: #ee9ca7;
-      border: none;
-      color: white;
-      font-size: 1em;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    .choices button:hover {
-      background: #ff6f91;
-    }
-    .lang {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-    }
-  </style>
+    <title>Aşk İlanı Oyunu</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        #oyunAlani { width: 400px; height: 300px; border: 1px solid #000; margin: 20px auto; position: relative; }
+        .kalp {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        #mesajAlani { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+    </style>
 </head>
 <body>
-  <div class="lang">
-    <button onclick="setLang('tr')">TR</button>
-    <button onclick="setLang('ru')">RU</button>
-  </div>
-  <div class="container" id="game">
-    <!-- Oyun buraya gelecek -->
-  </div>  <script>
-    const scenes = {
-      tr: [
-        { q: "Arcan Maria'ya mesaj atar: \"Uykun mu geldi, yoksa bana mı küssün?\"", a: ["Uykum geldi", "Sana kırgınım"] },
-        { q: "Maria cevap verir: \"Uzak olmak zor ama sevgim hiç azalmadı.\"", a: ["Benim de...", "Sonsuza kadar sen"] },
-        { q: "Bir tartışma yaşanır... Arcan: \"Keşke her şey daha kolay olsaydı.\"", a: ["Seninle her zorluğu aşarım", "Bazen pes etmek istiyorum"] },
-        { q: "Maria: \"Kalbim sadece seninle.\"", a: ["Benimki de", "Gözlerin aklımda"] }
-      ],
-      ru: [
-        { q: "Арджан пишет Марии: \"Ты спишь или обижаешься на меня?\"", a: ["Хочу спать", "Я обижена"] },
-        { q: "Мария отвечает: \"На расстоянии трудно, но моя любовь не угасла.\"", a: ["И моя тоже...", "Навсегда ты"] },
-        { q: "Происходит ссора... Арджан: \"Если бы всё было проще.\"", a: ["С тобой всё преодолею", "Иногда хочется сдаться"] },
-        { q: "Мария: \"Моё сердце только с тобой.\"", a: ["И моё", "Твои глаза в моей памяти"] }
-      ]
-    };
-
-    let currentLang = 'tr';
-    let index = 0;
-
-    function setLang(lang) {
-      currentLang = lang;
-      index = 0;
-      renderScene();
-    }
-
-    async function getAIResponse(userChoice) {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer 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",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "mistralai/mixtral-8x7b-instruct",
-          messages: [
-            {
-              role: "system",
-              content: "Sen Maria ile Arcan'ın uzun mesafe aşk hikayesini yazan romantik bir yazarsın. Diyaloglar duygu dolu, insana dokunan olmalı."
-            },
-            {
-              role: "user",
-              content: `Oyuncu şu seçimi yaptı: "${userChoice}". Bu duruma göre Maria ve Arcan arasında geçen 1-2 cümlelik romantik bir diyalog yaz.`
-            }
-          ]
-        })
-      });
-
-      const data = await response.json();
-      return data.choices[0].message.content;
-    }
-
-    function renderScene() {
-      const scene = scenes[currentLang][index];
-      const gameDiv = document.getElementById('game');
-      if (!scene) return;
-      gameDiv.innerHTML = `
-        <div class="dialogue">
-          <div class="question">${scene.q}</div>
-          <div class="choices">
-            ${scene.a.map(a => `<button onclick="handleChoice('${a}')">${a}</button>`).join('')}
-          </div>
+    <h1>Aşkımın Binbir Yolu</h1>
+    <div id="oyunAlani">
         </div>
-      `;
-    }
+    <div id="mesajAlani"></div>
 
-    async function handleChoice(choice) {
-      const gameDiv = document.getElementById('game');
-      gameDiv.innerHTML = `<p>Yükleniyor...</p>`;
-      const aiText = await getAIResponse(choice);
-      gameDiv.innerHTML = `<div class='dialogue'><p>${aiText}</p><button onclick='nextScene()'>Devam et</button></div>`;
-    }
+    <script>
+        const oyunAlani = document.getElementById('oyunAlani');
+        const mesajAlani = document.getElementById('mesajAlani');
+        const kalpSayisi = 15;
+        let tiklananKalpSayisi = 0;
+        const sonMesajTr = "Seni seviyorum, dünden çok yarından az ❤️";
+        const sonMesajRu = "Я люблю тебя, вчера больше, чем завтра ❤️";
 
-    function nextScene() {
-      index++;
-      if (index < scenes[currentLang].length) {
-        renderScene();
-      } else {
-        document.getElementById('game').innerHTML = `
-          <h2 style="text-align:center;">${currentLang === 'tr' ? 'Seni seviyorum, dünden çok, yarından az ♥️' : 'Я люблю тебя — больше, чем вчера, меньше, чем завтра ♥️'}</h2>
-        `;
-      }
-    }
+        function rastgeleKonum() {
+            const x = Math.random() * (oyunAlani.offsetWidth - 30);
+            const y = Math.random() * (oyunAlani.offsetHeight - 30);
+            return { x, y };
+        }
 
-    renderScene();
-  </script></body>
+        function kalpOlustur(index) {
+            const kalp = document.createElement('div');
+            kalp.classList.add('kalp');
+            const konum = rastgeleKonum();
+            kalp.style.left = `${konum.x}px`;
+            kalp.style.top = `${konum.y}px`;
+            kalp.innerText = index + 1;
+            kalp.addEventListener('click', kalpTiklandi);
+            oyunAlani.appendChild(kalp);
+        }
+
+        function kalpTiklandi() {
+            this.style.backgroundColor = 'pink';
+            this.style.borderColor = 'hotpink';
+            tiklananKalpSayisi++;
+            if (tiklananKalpSayisi === kalpSayisi) {
+                oyunBitti();
+            }
+        }
+
+        function oyunBitti() {
+            oyunAlani.innerHTML = ''; // Tüm kalpleri temizle
+            const mesajTrElement = document.createElement('div');
+            mesajTrElement.innerText = sonMesajTr;
+            mesajAlani.appendChild(mesajTrElement);
+
+            const mesajRuElement = document.createElement('div');
+            mesajRuElement.innerText = sonMesajRu;
+            mesajAlani.appendChild(mesajRuElement);
+        }
+
+        for (let i = 0; i < kalpSayisi; i++) {
+            kalpOlustur(i);
+        }
+    </script>
+</body>
 </html>
